@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="asyn.css">
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="wrapper">
+        <div class="searchbar">
+            <input type="text" placeholder="Search movie" />
+            <button>Search</button>
+        </div>
+      
+
+      <div id="results"></div>
+    </div>
+
+    <script>
+      let input = document.querySelector("input");
+      let button = document.querySelector("button");
+      let wrapper = document.querySelector("#wrapper");
+      let result=document.querySelector("#results")
+      const image_url = "https://image.tmdb.org/t/p/original";
+      const API_KEY = "3fb4c3ddfc88192745a5708f0de70cba";
+      const URL = `https://api.themoviedb.org/3/search/movie?include_adult=false&language=en-US&page=1&api_key=${API_KEY}`;
+
+      async function fetchdata() {
+        let response = await fetch(URL + `&query=${input.value}`);
+        let result = await response.json();
+        console.log(result.results);
+        getdata(result.results);
+      }
+
+      button.addEventListener("click", fetchdata);
+
+      function getdata(arr) {
+        result.innerHTML=" "
+        arr.forEach((element) => {
+          let Div = document.createElement("div");
+          let img = document.createElement("img");
+          let h3 = document.createElement("h3");
+          Div.classList.add("movie-size")
+          img.classList.add("size")
+          if(element.poster_path===null){
+           img.src=`${image_url + "/uhgJPxTZ9IpKgSAC9D73SJO0jik.jpg"}`
+          }
+          else{
+            img.src = image_url + element.poster_path;
+          }
+        
+          h3.innerHTML = `${element.title}`;
+         
+          Div.append(img);
+          Div.append(h3);
+          result.append(Div);
+        });
+      }
+    </script>
+  </body>
+</html>
